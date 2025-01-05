@@ -166,6 +166,9 @@ def prepare_data(cfg: Config):
         }
         for label, kind, path in settings.iterate_all_train_images()
     )
+    # Sort the DataFrame by the "path" column to ensure the only random seed affects the train/test splitting
+    df = df.sort_values(by="path").reset_index(drop=True)
+
     df_train, df_val = train_test_split(df, test_size=cfg.test_size,
                                         random_state=cfg.random_seed, stratify=df['label'])
     train_dataset = ImageDataset(df_train, transform=get_transform(cfg, 'train'))
