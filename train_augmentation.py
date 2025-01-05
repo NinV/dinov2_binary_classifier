@@ -1,3 +1,6 @@
+import pathlib
+import json
+from dataclasses import asdict
 import tyro
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
@@ -6,6 +9,12 @@ from models import Config, BinaryClassifier
 
 
 def main(cfg: Config):
+    saved_dir = pathlib.Path(cfg.save_dir)
+    saved_dir.mkdir(exist_ok=True, parents=True)
+
+    with open(saved_dir / "config.json", 'w') as json_file:
+        json.dump(asdict(cfg), json_file, indent=2)
+
     checkpoint_callback = ModelCheckpoint(
         dirpath=cfg.save_dir,
         save_top_k=1,
