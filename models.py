@@ -19,7 +19,7 @@ from utils import Settings
 class Config:
     save_dir: str = 'saved_model'
     model_size: str = 'base'
-    batch_size: int = 16
+    batch_size: int = 32
     max_epochs: int = 10
     imsize: int = 224       # Must be multiplier of 14, because ViT backbone use 14x14 grid
     backbone_num_patches: int = 14
@@ -129,7 +129,7 @@ class BinaryClassifier(pl.LightningModule):
         return {"val_loss": loss, "val_acc": acc}
 
     def configure_optimizers(self):
-        optimizer = torch.optim.SGD(self.parameters(), lr=self.cfg.lr)
+        optimizer = torch.optim.AdamW(self.parameters(), lr=self.cfg.lr)
         return optimizer
 
 
